@@ -17,6 +17,7 @@
 <body>
   <div id="page">
     <section id="auth-screen" class="auth-screen">
+      <button id="theme-fab" class="theme-fab" type="button" aria-label="Basculer le mode sombre">🌙</button>
       <div class="auth-card">
         <div class="brand-mark" aria-hidden="true">✓</div>
 
@@ -271,6 +272,16 @@
             <div class="account-details">
               <span>Connecté avec</span>
               <strong id="account-email">—</strong>
+            </div>
+            <div class="theme-row">
+              <div>
+                <strong>Mode sombre</strong>
+                <span>Interface néon sur fond noir</span>
+              </div>
+              <label class="switch">
+                <input id="theme-toggle" type="checkbox" aria-label="Activer le mode sombre">
+                <span class="slider"></span>
+              </label>
             </div>
             <button id="logout-button" class="danger-button" type="button">Se déconnecter</button>
           </section>

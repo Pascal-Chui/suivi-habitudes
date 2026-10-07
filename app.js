@@ -1492,6 +1492,71 @@ async function handleSession(session) {
   }
 }
 
+const THEME_STORAGE_KEY = "suivi-theme";
+
+function currentTheme() {
+  return document.documentElement.dataset.theme === "dark"
+    ? "dark"
+    : "light";
+}
+
+function applyTheme(theme) {
+  const normalized = theme === "dark" ? "dark" : "light";
+
+  document.documentElement.dataset.theme = normalized;
+
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+
+  if (metaTheme) {
+    metaTheme.setAttribute(
+      "content",
+      normalized === "dark" ? "#0a0a10" : "#2563eb"
+    );
+  }
+
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, normalized);
+  } catch (error) {
+    console.warn("Thème non sauvegardé :", error);
+  }
+
+  const toggle = document.querySelector("#theme-toggle");
+
+  if (toggle) {
+    toggle.checked = normalized === "dark";
+  }
+
+  const fab = document.querySelector("#theme-fab");
+
+  if (fab) {
+    fab.textContent = normalized === "dark" ? "☀️" : "🌙";
+    fab.setAttribute(
+      "aria-label",
+      normalized === "dark"
+        ? "Basculer le mode clair"
+        : "Basculer le mode sombre"
+    );
+  }
+}
+
+function initTheme() {
+  let saved = null;
+
+  try {
+    saved = localStorage.getItem(THEME_STORAGE_KEY);
+  } catch (error) {
+    saved = null;
+  }
+
+  if (saved !== "dark" && saved !== "light") {
+    saved = window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+
+  applyTheme(saved);
+}
+
 function bindEvents() {
   loginForm.addEventListener(
     "submit",
@@ -1566,6 +1631,22 @@ function bindEvents() {
       }
     }
   );
+
+  const themeToggle = document.querySelector("#theme-toggle");
+
+  if (themeToggle) {
+    themeToggle.addEventListener("change", () => {
+      applyTheme(themeToggle.checked ? "dark" : "light");
+    });
+  }
+
+  const themeFab = document.querySelector("#theme-fab");
+
+  if (themeFab) {
+    themeFab.addEventListener("click", () => {
+      applyTheme(currentTheme() === "dark" ? "light" : "dark");
+    });
+  }
 
   document.addEventListener(
     "click",
@@ -1731,4 +1812,5 @@ bindEvents();
 resetTrackerForm();
 switchView("home");
 registerServiceWorker();
+initTheme();
 initializeAuth();
