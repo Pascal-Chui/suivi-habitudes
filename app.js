@@ -1381,6 +1381,37 @@ function switchView(viewName) {
   }
 }
 
+async function signInWithGoogle() {
+  const button = document.querySelector("#google-login-button");
+  const pageUrl = `${window.location.origin}${window.location.pathname}`;
+
+  if (button) {
+    button.disabled = true;
+  }
+
+  setFormMessage(loginMessage);
+
+  try {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: pageUrl
+      }
+    });
+
+    if (error) {
+      throw error;
+    }
+  } catch (error) {
+    console.error(error);
+    setFormMessage(loginMessage, frenchError(error), "error");
+
+    if (button) {
+      button.disabled = false;
+    }
+  }
+}
+
 async function sendLoginLink(event) {
   event.preventDefault();
 
@@ -1562,6 +1593,15 @@ function bindEvents() {
     "submit",
     sendLoginLink
   );
+
+  const googleButton = document.querySelector("#google-login-button");
+
+  if (googleButton) {
+    googleButton.addEventListener(
+      "click",
+      signInWithGoogle
+    );
+  }
 
   logoutButton.addEventListener(
     "click",

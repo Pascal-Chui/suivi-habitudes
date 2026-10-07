@@ -293,6 +293,56 @@ small {
   box-shadow: var(--glow);
 }
 
+.google-button {
+  display: flex;
+  width: 100%;
+  min-height: 52px;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 17px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+  transition:
+    transform 0.1s ease,
+    border-color 0.15s ease,
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.google-button:hover {
+  border-color: color-mix(in srgb, var(--primary) 45%, transparent);
+}
+
+.google-button:active {
+  transform: scale(0.985);
+}
+
+.google-button:disabled {
+  opacity: 0.6;
+}
+
+.divider {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 20px 0;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.divider::before,
+.divider::after {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  content: "";
+}
+
 .app-screen {
   min-height: 100vh;
   min-height: 100dvh;
