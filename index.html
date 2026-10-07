@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <title>Suivi — Habitudes</title>
+
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icon-180.png">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+  <div id="page">
+    <section id="auth-screen" class="auth-screen">
+      <div class="auth-card">
+        <div class="brand-mark" aria-hidden="true">✓</div>
+
+        <h1>Suivi</h1>
+        <p class="auth-intro">
+          Suis tes habitudes, tes pensées, tes achats et les événements qui comptent pour toi.
+        </p>
+
+        <form id="login-form" class="stack">
+          <label for="login-email">Adresse courriel</label>
+          <input
+            id="login-email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            inputmode="email"
+            placeholder="nom@exemple.com"
+            required
+          >
+
+          <button id="login-button" class="primary-button" type="submit">
+            Envoyer le lien
+          </button>
+        </form>
+
+        <p id="login-message" class="form-message" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section id="app-screen" class="app-screen" hidden>
+      <main class="app-shell">
+        <section id="view-home" class="view" data-view="home">
+          <header class="screen-header">
+            <div>
+              <p class="eyebrow">Aujourd’hui</p>
+              <h1 id="today-title">Suivi</h1>
+              <p id="today-date" class="muted"></p>
+            </div>
+          </header>
+
+          <section id="starter-section" class="starter-section" hidden>
+            <div class="section-heading">
+              <div>
+                <h2>Commencer rapidement</h2>
+                <p>Ajoute un modèle en un tap.</p>
+              </div>
+            </div>
+
+            <div id="starter-grid" class="starter-grid"></div>
+          </section>
+
+          <section>
+            <div class="section-heading">
+              <div>
+                <h2>Mes trackers</h2>
+                <p id="home-summary">Tes événements du jour.</p>
+              </div>
+            </div>
+
+            <div id="home-trackers" class="tracker-grid"></div>
+
+            <div id="home-empty" class="empty-state" hidden>
+              <div class="empty-icon">＋</div>
+              <h3>Aucun tracker</h3>
+              <p>Choisis un modèle ci-dessus ou crée ton propre tracker.</p>
+              <button class="secondary-button" type="button" data-go-view="trackers">
+                Créer un tracker
+              </button>
+            </div>
+          </section>
+        </section>
+
+        <section id="view-stats" class="view" data-view="stats" hidden>
+          <header class="screen-header">
+            <div>
+              <p class="eyebrow">Analyse</p>
+              <h1>Statistiques</h1>
+              <p class="muted">Observe tes tendances dans le temps.</p>
+            </div>
+          </header>
+
+          <div id="stats-empty" class="empty-state" hidden>
+            <div class="empty-icon">📊</div>
+            <h3>Aucune statistique</h3>
+            <p>Crée d’abord un tracker pour commencer à mesurer tes habitudes.</p>
+            <button class="secondary-button" type="button" data-go-view="trackers">
+              Créer un tracker
+            </button>
+          </div>
+
+          <div id="stats-content">
+            <div class="panel stats-controls">
+              <label for="stats-tracker">Tracker</label>
+              <select id="stats-tracker"></select>
+
+              <div class="period-switch" aria-label="Période">
+                <button
+                  class="period-button active"
+                  type="button"
+                  data-period="7"
+                  aria-pressed="true"
+                >
+                  7 jours
+                </button>
+                <button
+                  class="period-button"
+                  type="button"
+                  data-period="30"
+                  aria-pressed="false"
+                >
+                  30 jours
+                </button>
+              </div>
+            </div>
+
+            <div class="stats-kpis">
+              <article class="kpi-card">
+                <span>Total</span>
+                <strong id="stats-total">0</strong>
+              </article>
+              <article class="kpi-card">
+                <span>Moyenne / jour</span>
+                <strong id="stats-average">0</strong>
+              </article>
+            </div>
+
+            <section class="panel">
+              <div class="section-heading compact">
+                <div>
+                  <h2>Évolution</h2>
+                  <p id="stats-period-label"></p>
+                </div>
+              </div>
+              <div id="stats-chart" class="vertical-chart" aria-label="Graphique de la période"></div>
+            </section>
+
+            <section class="panel">
+              <div class="section-heading compact">
+                <div>
+                  <h2>Répartition</h2>
+                  <p>Par sous-type.</p>
+                </div>
+              </div>
+              <div id="subtype-breakdown" class="breakdown-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="view-trackers" class="view" data-view="trackers" hidden>
+          <header class="screen-header">
+            <div>
+              <p class="eyebrow">Configuration</p>
+              <h1>Trackers</h1>
+              <p class="muted">Crée et organise ce que tu veux suivre.</p>
+            </div>
+          </header>
+
+          <section id="tracker-form-panel" class="panel">
+            <div class="section-heading compact">
+              <div>
+                <h2 id="tracker-form-title">Nouveau tracker</h2>
+                <p>Configure son apparence et son mode de mesure.</p>
+              </div>
+            </div>
+
+            <form id="tracker-form" class="tracker-form">
+              <input id="tracker-id" type="hidden">
+
+              <div class="form-row">
+                <div class="field grow">
+                  <label for="tracker-name">Nom</label>
+                  <input id="tracker-name" type="text" maxlength="60" placeholder="Ex. Pensée" required>
+                </div>
+                <div class="field emoji-field">
+                  <label for="tracker-icon">Emoji</label>
+                  <input id="tracker-icon" type="text" maxlength="12" placeholder="💭">
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="field">
+                  <label for="tracker-color">Couleur</label>
+                  <input id="tracker-color" type="color" value="#2563eb">
+                </div>
+                <div class="field grow">
+                  <label for="tracker-kind">Type</label>
+                  <select id="tracker-kind">
+                    <option value="count">Compteur</option>
+                    <option value="amount">Montant</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="tracker-unit">Unité</label>
+                <input id="tracker-unit" type="text" maxlength="20" placeholder="Ex. $, min">
+                <small>Utile principalement pour les trackers de type montant.</small>
+              </div>
+
+              <div class="field">
+                <label for="tracker-subtypes">Sous-types</label>
+                <input id="tracker-subtypes" type="text" placeholder="Ex. Manque d'argent, Appeler quelqu'un, Autre">
+                <small>Sépare les sous-types par des virgules.</small>
+              </div>
+
+              <div class="form-actions">
+                <button id="tracker-submit" class="primary-button" type="submit">Ajouter</button>
+                <button id="tracker-cancel" class="ghost-button" type="button" hidden>Annuler</button>
+              </div>
+            </form>
+
+            <p id="tracker-form-message" class="form-message" role="status" aria-live="polite"></p>
+          </section>
+
+          <section id="trackers-starter-section" class="starter-section" hidden>
+            <div class="section-heading">
+              <div>
+                <h2>Modèles</h2>
+                <p>Ajoute rapidement un premier tracker.</p>
+              </div>
+            </div>
+            <div id="trackers-starter-grid" class="starter-grid"></div>
+          </section>
+
+          <section>
+            <div class="section-heading">
+              <div>
+                <h2>Trackers existants</h2>
+                <p>Modifie ou supprime tes trackers.</p>
+              </div>
+            </div>
+            <div id="tracker-management-list" class="management-list"></div>
+            <div id="trackers-empty" class="empty-state" hidden>
+              <div class="empty-icon">🧭</div>
+              <h3>Rien pour l’instant</h3>
+              <p>Ton premier tracker apparaîtra ici.</p>
+            </div>
+          </section>
+        </section>
+
+        <section id="view-account" class="view" data-view="account" hidden>
+          <header class="screen-header">
+            <div>
+              <p class="eyebrow">Profil</p>
+              <h1>Compte</h1>
+              <p class="muted">Informations de ta session.</p>
+            </div>
+          </header>
+
+          <section class="panel account-panel">
+            <div class="account-avatar" aria-hidden="true">👤</div>
+            <div class="account-details">
+              <span>Connecté avec</span>
+              <strong id="account-email">—</strong>
+            </div>
+            <button id="logout-button" class="danger-button" type="button">Se déconnecter</button>
+          </section>
+        </section>
+      </main>
+
+      <nav class="bottom-nav" aria-label="Navigation principale">
+        <div class="bottom-nav-inner">
+          <button class="nav-item active" type="button" data-view-target="home" aria-current="page">
+            <span class="nav-icon" aria-hidden="true">⌂</span>
+            <span>Accueil</span>
+          </button>
+          <button class="nav-item" type="button" data-view-target="stats">
+            <span class="nav-icon" aria-hidden="true">▥</span>
+            <span>Stats</span>
+          </button>
+          <button class="nav-item" type="button" data-view-target="trackers">
+            <span class="nav-icon" aria-hidden="true">◎</span>
+            <span>Trackers</span>
+          </button>
+          <button class="nav-item" type="button" data-view-target="account">
+            <span class="nav-icon" aria-hidden="true">●</span>
+            <span>Compte</span>
+          </button>
+        </div>
+      </nav>
+    </section>
+  </div>
+
+  <div id="sheet-backdrop" class="sheet-backdrop" hidden></div>
+
+  <section id="event-sheet" class="bottom-sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" hidden>
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <div class="sheet-header">
+      <div>
+        <p id="sheet-eyebrow" class="eyebrow">Nouvel événement</p>
+        <h2 id="sheet-title">Tracker</h2>
+      </div>
+      <button id="sheet-close" class="icon-button" type="button" aria-label="Fermer">×</button>
+    </div>
+
+    <form id="event-form" class="stack">
+      <input id="event-tracker-id" type="hidden">
+
+      <div id="subtype-field" class="field" hidden>
+        <label>Sous-type</label>
+        <div id="subtype-chips" class="chips"></div>
+      </div>
+
+      <div id="amount-field" class="field" hidden>
+        <label id="amount-label" for="event-amount">Montant</label>
+        <input id="event-amount" type="number" inputmode="decimal" min="0" step="any" placeholder="0">
+      </div>
+
+      <div class="field">
+        <label for="event-note">Note <span class="optional">(optionnel)</span></label>
+        <textarea id="event-note" rows="3" maxlength="1000" placeholder="Ajoute un détail si nécessaire…"></textarea>
+      </div>
+
+      <button id="event-submit" class="primary-button large" type="submit">Enregistrer</button>
+      <p id="event-message" class="form-message" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
