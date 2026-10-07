@@ -1,4 +1,4 @@
-const CACHE_NAME = "suivi-static-v2";
+const CACHE_NAME = "suivi-static-v3";
 
 const LOCAL_FILES = [
   "./index.html",
